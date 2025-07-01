@@ -1388,6 +1388,17 @@
             activeTutorial.classList.add('active');
         }
     }
+    // Expande o colapsa el contenido de un paso del tutorial
+    function toggleStep(element) {
+        const stepContent = element.nextElementSibling;
+        const toggleIcon = element.querySelector('.step-toggle');
+        stepContent.classList.toggle('collapsed');
+        if (stepContent.classList.contains('collapsed')) {
+            toggleIcon.textContent = '▼';
+        } else {
+            toggleIcon.textContent = '▲';
+        }
+    }
 
     // Vuelve al menú principal (usado desde el tutorial de OneDrive)
     function goBackToMainMenu() {
