@@ -1353,161 +1353,141 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://unpkg.com/html-to-docx-js/dist/html-to-docx.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://unpkg.com/html-to-docx-js/dist/html-to-docx.js"></script>
 
-<script>
-    // --- NAVEGACIÓN BÁSICA ---
+    <script>
+        // --- NAVEGACIÓN PRINCIPAL ---
 
-    // --- NUEVAS FUNCIONES DE NAVEGACIÓN ---
-
-    // Oculta todo y muestra el menú principal
-    function showMainMenu() {
-        document.getElementById('tutorialGrid').style.display = 'grid';
-        document.getElementById('submenuGrid').style.display = 'none';
-        document.getElementById('searchInput').style.display = 'block';
-        document.querySelectorAll('.tutorial-content').forEach(t => t.classList.remove('active'));
-    }
-
-    // Oculta todo y muestra el submenú
-    function showSubMenu() {
-        document.getElementById('tutorialGrid').style.display = 'none';
-        document.getElementById('submenuGrid').style.display = 'grid';
-        document.getElementById('searchInput').style.display = 'none'; // Ocultamos la búsqueda en el submenú
-        document.querySelectorAll('.tutorial-content').forEach(t => t.classList.remove('active'));
-    }
-
-    // Muestra un tutorial específico, ocultando los menús
-    function showTutorial(tutorialId) {
-        document.getElementById('tutorialGrid').style.display = 'none';
-        document.getElementById('submenuGrid').style.display = 'none';
-        document.getElementById('searchInput').style.display = 'none';
-        
-        const activeTutorial = document.getElementById('tutorial' + tutorialId);
-        if (activeTutorial) {
-            activeTutorial.classList.add('active');
+        // Oculta todo y muestra el menú principal
+        function showMainMenu() {
+            document.getElementById('tutorialGrid').style.display = 'grid';
+            document.getElementById('submenuGrid').style.display = 'none';
+            document.getElementById('searchInput').style.display = 'block';
+            document.querySelectorAll('.tutorial-content').forEach(t => t.classList.remove('active'));
         }
-    }
-    // Expande o colapsa el contenido de un paso del tutorial
-    function toggleStep(element) {
-        const stepContent = element.nextElementSibling;
-        const toggleIcon = element.querySelector('.step-toggle');
-        stepContent.classList.toggle('collapsed');
-        if (stepContent.classList.contains('collapsed')) {
-            toggleIcon.textContent = '▼';
-        } else {
-            toggleIcon.textContent = '▲';
+
+        // Oculta todo y muestra el submenú
+        function showSubMenu() {
+            document.getElementById('tutorialGrid').style.display = 'none';
+            document.getElementById('submenuGrid').style.display = 'grid';
+            document.getElementById('searchInput').style.display = 'none';
+            document.querySelectorAll('.tutorial-content').forEach(t => t.classList.remove('active'));
         }
-    }
 
-    // Vuelve al menú principal (usado desde el tutorial de OneDrive)
-    function goBackToMainMenu() {
-        showMainMenu();
-    }
+        // Muestra un tutorial específico, ocultando los menús
+        function showTutorial(tutorialId) {
+            document.getElementById('tutorialGrid').style.display = 'none';
+            document.getElementById('submenuGrid').style.display = 'none';
+            document.getElementById('searchInput').style.display = 'none';
+            
+            document.querySelectorAll('.tutorial-content').forEach(t => t.classList.remove('active'));
+            const activeTutorial = document.getElementById('tutorial' + tutorialId);
+            if (activeTutorial) {
+                activeTutorial.classList.add('active');
+            }
+        }
 
-    // Vuelve al submenú (usado desde los tutoriales de gestión de correo)
-    function goBackToSubMenu() {
-        showSubMenu();
-    }
-    // --- FUNCIÓN DE DESCARGA DE PDF (VERSIÓN CON PAGINACIÓN INTELIGENTE) ---
+        // Vuelve al menú principal
+        function goBackToMainMenu() {
+            showMainMenu();
+        }
 
-    async function downloadPDF(tutorialId) {
-        const { jsPDF } = window.jspdf;
-        const tutorialContent = document.getElementById('tutorial' + tutorialId);
-        const downloadButton = tutorialContent.querySelector('.download-pdf-button');
-        
-        // Cambiamos el estado del botón para dar feedback al usuario
-        const originalButtonText = downloadButton.textContent;
-        downloadButton.textContent = 'Generando...';
-        downloadButton.disabled = true;
+        // Vuelve al submenú
+        function goBackToSubMenu() {
+            showSubMenu();
+        }
 
-        // Expandimos las secciones para que todo el contenido sea visible para la captura
-        const sectionsToExpand = tutorialContent.querySelectorAll('.step-content.collapsed');
-        sectionsToExpand.forEach(section => section.classList.remove('collapsed'));
+        // --- FUNCIONALIDAD DE LOS TUTORIALES ---
 
-        try {
-            // 1. Inicializamos el documento PDF y definimos márgenes y posición inicial
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const pageHeight = pdf.internal.pageSize.getHeight();
-            const pageWidth = pdf.internal.pageSize.getWidth();
-            const margin = 15;
-            const effectivePageWidth = pageWidth - 2 * margin;
-            let cursorY = margin; // 'cursorY' es la posición vertical donde se añadirá el siguiente elemento
+        // **FUNCIÓN TOGGLE QUE FALTABA**
+        // Expande o colapsa el contenido de un paso del tutorial
+        function toggleStep(element) {
+            const stepContent = element.nextElementSibling;
+            const toggleIcon = element.querySelector('.step-toggle');
+            stepContent.classList.toggle('collapsed');
+            if (stepContent.classList.contains('collapsed')) {
+                toggleIcon.textContent = '▼';
+            } else {
+                toggleIcon.textContent = '▲';
+            }
+        }
 
-            // 2. Seleccionamos todos los bloques de contenido que queremos renderizar
-            const elements = tutorialContent.querySelectorAll('.content-header h2, .tip, .step-section, .troubleshooting, .success');
+        // --- FUNCIONES DE DESCARGA ---
 
-            // 3. Recorremos cada elemento para añadirlo al PDF uno por uno
-            for (const element of elements) {
-                const canvas = await html2canvas(element, { scale: 2, useCORS: true });
-                
-                const imgData = canvas.toDataURL('image/png');
-                const imgWidth = effectivePageWidth;
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                
-                // 4. Verificamos si el elemento cabe en la página actual
-                if (cursorY + imgHeight > pageHeight - margin) {
-                    pdf.addPage(); // Si no cabe, creamos una página nueva
-                    cursorY = margin; // Y reiniciamos la posición al margen superior
+        // Descarga el PDF con paginación inteligente
+        async function downloadPDF(tutorialId) {
+            const { jsPDF } = window.jspdf;
+            const tutorialContent = document.getElementById('tutorial' + tutorialId);
+            const downloadButton = tutorialContent.querySelector('.download-pdf-button');
+            
+            const originalButtonText = downloadButton.textContent;
+            downloadButton.textContent = 'Generando...';
+            downloadButton.disabled = true;
+
+            const sectionsToExpand = tutorialContent.querySelectorAll('.step-content.collapsed');
+            sectionsToExpand.forEach(section => section.classList.remove('collapsed'));
+
+            try {
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pageHeight = pdf.internal.pageSize.getHeight();
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const margin = 15;
+                const effectivePageWidth = pageWidth - 2 * margin;
+                let cursorY = margin;
+
+                const elements = tutorialContent.querySelectorAll('.content-header h2, .tip, .step-section, .troubleshooting, .success');
+
+                for (const element of elements) {
+                    const canvas = await html2canvas(element, { scale: 2, useCORS: true });
+                    const imgData = canvas.toDataURL('image/png');
+                    const imgWidth = effectivePageWidth;
+                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                    
+                    if (cursorY + imgHeight > pageHeight - margin) {
+                        pdf.addPage();
+                        cursorY = margin;
+                    }
+
+                    pdf.addImage(imgData, 'PNG', margin, cursorY, imgWidth, imgHeight);
+                    cursorY += imgHeight + 5;
                 }
 
-                // 5. Añadimos la imagen del elemento al PDF en la posición actual
-                pdf.addImage(imgData, 'PNG', margin, cursorY, imgWidth, imgHeight);
-                
-                // 6. Actualizamos la posición del cursor para el siguiente elemento
-                cursorY += imgHeight + 5; // Añadimos un pequeño espacio de 5mm entre bloques
+                const tutorialTitle = tutorialContent.querySelector('h2').textContent.trim();
+                pdf.save(`${tutorialTitle}.pdf`);
+
+            } catch (error) {
+                alert('Hubo un error al generar el PDF. Por favor, revisa la consola (F12).');
+                console.error("Error al generar el PDF:", error);
+            } finally {
+                sectionsToExpand.forEach(section => section.classList.add('collapsed'));
+                downloadButton.textContent = originalButtonText;
+                downloadButton.disabled = false;
             }
-
-            // 7. Guardamos el PDF final
-            const tutorialTitle = tutorialContent.querySelector('h2').textContent.trim();
-            pdf.save(`${tutorialTitle}.pdf`);
-
-        } catch (error) {
-            alert('Hubo un error al generar el PDF. Por favor, revisa la consola (F12).');
-            console.error("Error al generar el PDF:", error);
-        } finally {
-            // Siempre restauramos la vista original y el botón
-            sectionsToExpand.forEach(section => section.classList.add('collapsed'));
-            downloadButton.textContent = originalButtonText;
-            downloadButton.disabled = false;
         }
-    }
-    // --- FUNCIÓN DE DESCARGA DE WORD ---
-    
-    function downloadWord(tutorialId) {
-        const tutorialContent = document.getElementById('tutorial' + tutorialId);
-        const contentToExport = tutorialContent.cloneNode(true);
-        
-        // Limpiamos elementos de UI que no queremos en el documento
-        contentToExport.querySelector('.content-header').remove();
-        contentToExport.querySelector('.progress-bar').remove();
 
-        const htmlString = `<!DOCTYPE html><body>${contentToExport.innerHTML}</body></html>`;
-        const fileBuffer = htmlToDocx.asBlob(htmlString, {
-            // La librería intentará codificar las imágenes en base64 para incluirlas
-            mime: 'image/jpeg'
+        // --- EVENT LISTENERS ---
+
+        // Funcionalidad de búsqueda
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            document.querySelectorAll('#tutorialGrid .tutorial-card').forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(searchTerm) ? 'block' : 'none';
+            });
         });
 
-        const tutorialTitle = tutorialContent.querySelector('h2').textContent.trim();
-        saveAs(fileBuffer, `${tutorialTitle}.docx`);
-    }
-
-    // --- CÓDIGO INICIAL (NO CAMBIA) ---
-
-    document.getElementById('searchInput').addEventListener('keyup', function() {
-        const searchTerm = this.value.toLowerCase();
-        document.querySelectorAll('.tutorial-card').forEach(card => {
-            const text = card.textContent.toLowerCase();
-            card.style.display = text.includes(searchTerm) ? 'block' : 'none';
+        // Colapsar todos los pasos de los tutoriales al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.step-content').forEach(content => {
+                if (!content.classList.contains('collapsed')) {
+                    content.classList.add('collapsed');
+                    const toggleIcon = content.previousElementSibling.querySelector('.step-toggle');
+                    if(toggleIcon) toggleIcon.textContent = '▼';
+                }
+            });
         });
-    });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.step-content').forEach(content => {
-            content.classList.add('collapsed');
-            content.previousElementSibling.querySelector('.step-toggle').textContent = '▼';
-        });
-    });
-</script>
+    </script>
 </body>
 </html>
