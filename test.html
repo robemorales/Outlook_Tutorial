@@ -446,7 +446,7 @@
                 <h2>📮 Redirección Automática de Correos en Outlook</h2>
                 <div>
                     <button class="download-button download-pdf-button" onclick="downloadPDF(1)">Descargar PDF</button>
-                    <button class="download-button download-word-button" onclick="downloadWord(1)">Descargar Word</button>
+    
                     <button class="back-button" onclick="goBack()">← Volver</button>
                 </div>
             </div>
@@ -1380,67 +1380,69 @@
         toggleIcon.textContent = stepContent.classList.contains('collapsed') ? '▼' : '▲';
     }
 
-    // --- FUNCIÓN DE DESCARGA DE PDF (PARA GITHUB PAGES) ---
+    // --- FUNCIÓN DE DESCARGA DE PDF (VERSIÓN CON PAGINACIÓN INTELIGENTE) ---
 
-    function downloadPDF(tutorialId) {
+    async function downloadPDF(tutorialId) {
         const { jsPDF } = window.jspdf;
         const tutorialContent = document.getElementById('tutorial' + tutorialId);
         const downloadButton = tutorialContent.querySelector('.download-pdf-button');
         
+        // Cambiamos el estado del botón para dar feedback al usuario
         const originalButtonText = downloadButton.textContent;
         downloadButton.textContent = 'Generando...';
         downloadButton.disabled = true;
 
+        // Expandimos las secciones para que todo el contenido sea visible para la captura
         const sectionsToExpand = tutorialContent.querySelectorAll('.step-content.collapsed');
-        sectionsToExpand.forEach(section => {
-            section.classList.remove('collapsed');
-            const toggleIcon = section.previousElementSibling.querySelector('.step-toggle');
-            if (toggleIcon) toggleIcon.textContent = '▲';
-        });
+        sectionsToExpand.forEach(section => section.classList.remove('collapsed'));
 
-        // Pequeña demora para asegurar que el navegador renderice los cambios y las imágenes
-        setTimeout(() => {
-            html2canvas(tutorialContent, {
-                scale: 2,
-                useCORS: true, // Clave para cargar imágenes en un entorno en línea
-                logging: true // Muestra información útil en la consola
-            }).then(canvas => {
+        try {
+            // 1. Inicializamos el documento PDF y definimos márgenes y posición inicial
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const margin = 15;
+            const effectivePageWidth = pageWidth - 2 * margin;
+            let cursorY = margin; // 'cursorY' es la posición vertical donde se añadirá el siguiente elemento
+
+            // 2. Seleccionamos todos los bloques de contenido que queremos renderizar
+            const elements = tutorialContent.querySelectorAll('.content-header h2, .tip, .step-section, .troubleshooting, .success');
+
+            // 3. Recorremos cada elemento para añadirlo al PDF uno por uno
+            for (const element of elements) {
+                const canvas = await html2canvas(element, { scale: 2, useCORS: true });
+                
                 const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const imgWidth = pdfWidth - 20; // Márgenes de 10mm a cada lado
-                const imgHeight = canvas.height * imgWidth / canvas.width;
-                let heightLeft = imgHeight;
-                let position = 10; // Margen superior
-
-                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                heightLeft -= (pdf.internal.pageSize.getHeight() - 20);
-
-                while (heightLeft > 0) {
-                    position = heightLeft - imgHeight + 10;
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                    heightLeft -= (pdf.internal.pageSize.getHeight() - 20);
+                const imgWidth = effectivePageWidth;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                // 4. Verificamos si el elemento cabe en la página actual
+                if (cursorY + imgHeight > pageHeight - margin) {
+                    pdf.addPage(); // Si no cabe, creamos una página nueva
+                    cursorY = margin; // Y reiniciamos la posición al margen superior
                 }
-                const tutorialTitle = tutorialContent.querySelector('h2').textContent.trim();
-                pdf.save(`${tutorialTitle}.pdf`);
 
-            }).catch(err => {
-                alert('Hubo un error al generar el PDF. Por favor, revisa la consola del navegador (F12) para más detalles.');
-                console.error("Error en html2canvas:", err);
-            }).finally(() => {
-                // Restaurar la vista original
-                sectionsToExpand.forEach(section => {
-                    section.classList.add('collapsed');
-                    const toggleIcon = section.previousElementSibling.querySelector('.step-toggle');
-                    if (toggleIcon) toggleIcon.textContent = '▼';
-                });
-                downloadButton.textContent = originalButtonText;
-                downloadButton.disabled = false;
-            });
-        }, 1000); // 1 segundo de espera
+                // 5. Añadimos la imagen del elemento al PDF en la posición actual
+                pdf.addImage(imgData, 'PNG', margin, cursorY, imgWidth, imgHeight);
+                
+                // 6. Actualizamos la posición del cursor para el siguiente elemento
+                cursorY += imgHeight + 5; // Añadimos un pequeño espacio de 5mm entre bloques
+            }
+
+            // 7. Guardamos el PDF final
+            const tutorialTitle = tutorialContent.querySelector('h2').textContent.trim();
+            pdf.save(`${tutorialTitle}.pdf`);
+
+        } catch (error) {
+            alert('Hubo un error al generar el PDF. Por favor, revisa la consola (F12).');
+            console.error("Error al generar el PDF:", error);
+        } finally {
+            // Siempre restauramos la vista original y el botón
+            sectionsToExpand.forEach(section => section.classList.add('collapsed'));
+            downloadButton.textContent = originalButtonText;
+            downloadButton.disabled = false;
+        }
     }
-
     // --- FUNCIÓN DE DESCARGA DE WORD ---
     
     function downloadWord(tutorialId) {
