@@ -400,23 +400,13 @@
         </div>
 
         <div id="tutorialGrid" class="tutorial-grid">
-            <div class="tutorial-card" onclick="showTutorial(1)">
-                <span class="tutorial-icon">📮</span>
-                <h3 class="tutorial-title">Redirección Automática de Correos</h3>
-                <p class="tutorial-description">Configura el reenvío automático de todos tus correos a otra cuenta de forma sencilla y segura.</p>
+            <div class="tutorial-card" onclick="showSubMenu()">
+                <span class="tutorial-icon">🗃️</span>
+                <h3 class="tutorial-title">Gestión de Correo y Respaldos</h3>
+                <p class="tutorial-description">Incluye guías para respaldar, redireccionar y configurar respuestas automáticas en Outlook.</p>
                 <div class="tutorial-meta">
-                    <span>📊 6 pasos principales</span>
-                    <span>⏱️ 10-15 min</span>
-                </div>
-            </div>
-
-            <div class="tutorial-card" onclick="showTutorial(2)">
-                <span class="tutorial-icon">💾</span>
-                <h3 class="tutorial-title">Respaldo Completo de Correos</h3>
-                <p class="tutorial-description">Crea una copia de seguridad completa de todos tus correos, contactos y configuraciones.</p>
-                <div class="tutorial-meta">
-                    <span>📊 8 pasos principales</span>
-                    <span>⏱️ 5-60 min</span>
+                    <span>📊 3 tutoriales</span>
+                    <span>⏱️ Varios</span>
                 </div>
             </div>
 
@@ -429,15 +419,25 @@
                     <span>⏱️ 15-60 min</span>
                 </div>
             </div>
+        </div>
+
+        <div id="submenuGrid" class="tutorial-grid" style="display: none;">
+            <div class="tutorial-card" onclick="showTutorial(1)">
+                <span class="tutorial-icon">📮</span>
+                <h3 class="tutorial-title">Redirección Automática de Correos</h3>
+                <p class="tutorial-description">Configura el reenvío automático de todos tus correos a otra cuenta.</p>
+            </div>
+
+            <div class="tutorial-card" onclick="showTutorial(2)">
+                <span class="tutorial-icon">💾</span>
+                <h3 class="tutorial-title">Respaldo Completo de Correos</h3>
+                <p class="tutorial-description">Crea una copia de seguridad completa de todos tus correos y contactos.</p>
+            </div>
 
             <div class="tutorial-card" onclick="showTutorial(4)">
                 <span class="tutorial-icon">🔄</span>
                 <h3 class="tutorial-title">Respuesta Automática - Cuenta Desactivada</h3>
-                <p class="tutorial-description">Configura mensajes automáticos para informar sobre cuentas desactivadas y redireccionar contactos.</p>
-                <div class="tutorial-meta">
-                    <span>📊 4 pasos principales</span>
-                    <span>⏱️ 5-10 min</span>
-                </div>
+                <p class="tutorial-description">Configura mensajes automáticos para informar sobre cuentas desactivadas.</p>
             </div>
         </div>
 
@@ -1359,27 +1359,45 @@
 <script>
     // --- NAVEGACIÓN BÁSICA ---
 
-    function showTutorial(tutorialId) {
-        document.getElementById('tutorialGrid').style.display = 'none';
-        document.getElementById('searchInput').style.display = 'none';
-        document.querySelectorAll('.tutorial-content').forEach(t => t.classList.remove('active'));
-        const activeTutorial = document.getElementById('tutorial' + tutorialId);
-        if (activeTutorial) activeTutorial.classList.add('active');
-    }
+    // --- NUEVAS FUNCIONES DE NAVEGACIÓN ---
 
-    function goBack() {
+    // Oculta todo y muestra el menú principal
+    function showMainMenu() {
         document.getElementById('tutorialGrid').style.display = 'grid';
+        document.getElementById('submenuGrid').style.display = 'none';
         document.getElementById('searchInput').style.display = 'block';
         document.querySelectorAll('.tutorial-content').forEach(t => t.classList.remove('active'));
     }
 
-    function toggleStep(element) {
-        const stepContent = element.nextElementSibling;
-        const toggleIcon = element.querySelector('.step-toggle');
-        stepContent.classList.toggle('collapsed');
-        toggleIcon.textContent = stepContent.classList.contains('collapsed') ? '▼' : '▲';
+    // Oculta todo y muestra el submenú
+    function showSubMenu() {
+        document.getElementById('tutorialGrid').style.display = 'none';
+        document.getElementById('submenuGrid').style.display = 'grid';
+        document.getElementById('searchInput').style.display = 'none'; // Ocultamos la búsqueda en el submenú
+        document.querySelectorAll('.tutorial-content').forEach(t => t.classList.remove('active'));
     }
 
+    // Muestra un tutorial específico, ocultando los menús
+    function showTutorial(tutorialId) {
+        document.getElementById('tutorialGrid').style.display = 'none';
+        document.getElementById('submenuGrid').style.display = 'none';
+        document.getElementById('searchInput').style.display = 'none';
+        
+        const activeTutorial = document.getElementById('tutorial' + tutorialId);
+        if (activeTutorial) {
+            activeTutorial.classList.add('active');
+        }
+    }
+
+    // Vuelve al menú principal (usado desde el tutorial de OneDrive)
+    function goBackToMainMenu() {
+        showMainMenu();
+    }
+
+    // Vuelve al submenú (usado desde los tutoriales de gestión de correo)
+    function goBackToSubMenu() {
+        showSubMenu();
+    }
     // --- FUNCIÓN DE DESCARGA DE PDF (VERSIÓN CON PAGINACIÓN INTELIGENTE) ---
 
     async function downloadPDF(tutorialId) {
