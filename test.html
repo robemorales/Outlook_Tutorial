@@ -640,7 +640,7 @@
             <div class="success">
                 <strong>¡Felicitaciones!</strong> Has configurado exitosamente la redirección automática de correos en Outlook.
             </div>
-            <button class="back-button" onclick="goBack()">← Volver</button>
+            <button class="back-button" onclick="goBackToSubMenu()">← Volver</button>
         </div>
 
         <div id="tutorial2" class="tutorial-content">
@@ -751,7 +751,9 @@
                         <strong>4.</strong> Haz clic en "Siguiente" nuevamente
                     </div>
                     <img src="Fotos\Tutorial 2\Captura de pantalla 2025-06-30 104149.png" alt="Asistente para importar y exportar, seleccionando 'Archivo de datos de Outlook (.pst)'." class="tutorial-image">
-                    <p class="image-caption">Imagen 2.3: Selección del tipo de archivo PST para exportar.</p>
+                    <p class="image-caption">Imagen 2.3.1: Selección exporta archivo.</p>
+                    <img src="Fotos\Tutorial 2\Captura de pantalla 2025-06-30 121911.png" alt="Asistente para importar y exportar, seleccionando 'Archivo de datos de Outlook (.pst)'." class="tutorial-image">
+                    <p class="image-caption">Imagen 2.3.2: Selección exportar archivo .pst.</p>
                     <div class="tip">
                         <strong>¿Qué es un archivo .pst?</strong><br>
                         Es el formato oficial de Outlook que guarda TODO: correos, contactos, calendario, tareas, notas y configuraciones.
@@ -778,7 +780,7 @@
                     <div class="substep">
                         <strong>4.</strong> Haz clic en "Siguiente"
                     </div>
-                    <img src="images/backup_paso4_seleccionar_datos.png" alt="Selección de la cuenta principal de Outlook y la opción 'Incluir subcarpetas'." class="tutorial-image">
+                    <img src="Fotos\Tutorial 2\Captura de pantalla 2025-06-30 122008.png" alt="Selección de la cuenta principal de Outlook y la opción 'Incluir subcarpetas'." class="tutorial-image">
                     <p class="image-caption">Imagen 2.4: Elección de la cuenta y subcarpetas para el respaldo.</p>
                     <div class="checklist">
                         <h4>¿Qué incluye "subcarpetas"?</h4>
@@ -837,7 +839,7 @@
                     <div class="substep">
                         <strong>5.</strong> Haz clic en "Finalizar"
                     </div>
-                    <img src="images/backup_paso5_guardar_pst.png" alt="Ventana para guardar el archivo PST, eligiendo la ubicación y el nombre." class="tutorial-image">
+                    <img src="Fotos\Tutorial 2\Captura de pantalla 2025-06-30 122221.png" alt="Ventana para guardar el archivo PST, eligiendo la ubicación y el nombre." class="tutorial-image">
                     <p class="image-caption">Imagen 2.5: Selección de la ubicación y nombre del archivo de respaldo.</p>
                     <div class="warning">
                         No guardes el archivo .pst en una carpeta sincronizada con la nube (OneDrive, Dropbox) si no quieres que se suba automáticamente.
@@ -861,7 +863,7 @@
                     <div class="substep">
                         <strong>3.</strong> Haz clic en "Aceptar"
                     </div>
-                    <img src="images/backup_paso6_contrasena_pst.png" alt="Ventana para configurar una contraseña para el archivo PST." class="tutorial-image">
+                    <img src="Fotos\Tutorial 2\Captura de pantalla 2025-06-30 122301.png" alt="Ventana para configurar una contraseña para el archivo PST." class="tutorial-image">
                     <p class="image-caption">Imagen 2.6: Opción para proteger el archivo .pst con contraseña.</p>
                     <div class="tip">
                         Si estableces una contraseña, anótala en un lugar seguro. La necesitarás para abrir el archivo en el futuro.
@@ -885,7 +887,7 @@
                     <div class="substep">
                         <strong>3.</strong> Verás una barra de progreso o un mensaje de "Exportando" en la barra de estado de Outlook.
                     </div>
-                    <img src="images/backup_paso7_exportando.png" alt="Barra de progreso de exportación de datos en Outlook." class="tutorial-image">
+                    <img src="Fotos\Tutorial 2\Captura de pantalla 2025-06-30 122636.png" alt="Barra de progreso de exportación de datos en Outlook." class="tutorial-image">
                     <p class="image-caption">Imagen 2.7: Proceso de exportación de datos en curso.</p>
                     <div class="tip">
                         Para archivos muy grandes, considera hacer la exportación fuera de horas de trabajo para no interrumpir tus actividades.
@@ -937,7 +939,7 @@
             <div class="success">
                 <strong>¡Respaldo exitoso!</strong> Ahora puedes estar tranquilo sabiendo que tus datos están seguros.
             </div>
-            <button class="back-button" onclick="goBack()">← Volver</button> 
+            <button class="back-button" onclick="goBackToSubMenu()">← Volver</button> 
         </div>
 
         <div id="tutorial3" class="tutorial-content">
@@ -964,7 +966,7 @@
                         <br>Organiza los archivos si es necesario (crea carpetas, renombra archivos)
                         <br>Verifica que estén sincronizados: Los archivos deben mostrar una marca verde ✅ o sin iconos de error
                     </div>
-                    <img src="images/onedrive_paso1_carpeta_local.png" alt="Explorador de archivos mostrando una carpeta OneDrive sincronizada." class="tutorial-image">
+                    <img src="Fotos\Tutorial 3\Captura de pantalla 2025-06-30 123643.png" alt="Explorador de archivos mostrando una carpeta OneDrive sincronizada." class="tutorial-image">
                     <p class="image-caption">Imagen 3.1: Carpeta de OneDrive en el explorador de archivos.</p>
                     <div class="tip">
                         Tip de organización: Crea una carpeta llamada "Para_Transferir" y mueve ahí todo lo que quieres pasar.
@@ -989,10 +991,12 @@
                         <br>Configurar permisos ("Puede editar" es recomendado)
                         <br>Agregar un mensaje opcional
                     </div>
-                    <img src="images/onedrive_paso2a_compartir_explorador.png" alt="Menú contextual de OneDrive con la opción 'Compartir' desde el Explorador de Archivos." class="tutorial-image">
-                    <p class="image-caption">Imagen 3.2a: Compartir desde el Explorador de Archivos.</p>
-                    <img src="images/onedrive_paso2b_ventana_compartir_email.png" alt="Ventana de compartir de OneDrive para introducir email de destino." class="tutorial-image">
-                    <p class="image-caption">Imagen 3.2b: Ventana de compartir de OneDrive para ingresar el destinatario.</p>
+                    <img src="Fotos\Tutorial 3\Captura de pantalla 2025-06-30 124007.png" alt="Menú contextual de OneDrive con la opción 'Compartir' desde el Explorador de Archivos." class="tutorial-image">
+                    <p class="image-caption">Imagen 3.2.1: Compartir desde el Explorador de Archivos.</p>
+                    <img src="Fotos\Tutorial 3\Captura de pantalla 2025-06-30 124113.png" alt="Ventana de compartir de OneDrive para introducir email de destino." class="tutorial-image">
+                    <p class="image-caption">Imagen 3.2.2a: Ventana de compartir de OneDrive para ingresar el destinatario.</p>
+                    <img src="Fotos\Tutorial 3\Captura de pantalla 2025-06-30 124302.png" alt="Ventana de compartir de OneDrive para introducir email de destino." class="tutorial-image">
+                    <p class="image-caption">Imagen 3.2.2b: Vista desde OneDrive de archivo a compartir.</p>
                     <div class="substep">
                         <strong>Alternativa - Desde la aplicación OneDrive:</strong>
                         <br>Haz clic en el icono de OneDrive en la barra de tareas (Windows)
@@ -1027,7 +1031,7 @@
                     <div class="substep">
                         Haz clic en "Enviar"
                     </div>
-                    <img src="images/onedrive_paso3_permisos_y_mensaje.png" alt="Ventana de compartir de OneDrive, configurando permisos y mensaje." class="tutorial-image">
+                    <img src="Fotos\Tutorial 3\Captura de pantalla 2025-06-30 124445.png" alt="Ventana de compartir de OneDrive, configurando permisos y mensaje." class="tutorial-image">
                     <p class="image-caption">Imagen 3.3: Configuración de permisos y mensaje en OneDrive.</p>
                 </div>
             </div>
@@ -1049,7 +1053,7 @@
                         Haz clic en "Abrir"
                         <br>Inicia sesión en tu cuenta OneDrive de destino si es necesario
                     </div>
-                    <img src="images/onedrive_paso4_email_invitacion.png" alt="Email de invitación de OneDrive para acceder a archivos compartidos." class="tutorial-image">
+                    <img src="Fotos\Tutorial 3\Captura de pantalla 2025-06-30 124528.png" alt="Email de invitación de OneDrive para acceder a archivos compartidos." class="tutorial-image">
                     <p class="image-caption">Imagen 3.4: Correo de invitación para acceder a los archivos compartidos.</p>
                     <div class="tip">
                         Tiempo: El email puede tardar hasta 15 minutos en llegar. Revisa spam si no lo ves.
@@ -1070,7 +1074,7 @@
                         <br>Busca la carpeta o archivos que se compartieron contigo
                         <br>Haz clic para abrirlos y verificar que están completos
                     </div>
-                    <img src="images/onedrive_paso5_seccion_compartido.png" alt="Sección 'Compartido' en la interfaz web de OneDrive." class="tutorial-image">
+                    <img src="Fotos\Tutorial 3\Captura de pantalla 2025-06-30 124857.png" alt="Sección 'Compartido' en la interfaz web de OneDrive." class="tutorial-image">
                     <p class="image-caption">Imagen 3.5: Sección "Compartido" en OneDrive web.</p>
                     <div class="substep">
                         Ubicaciones de archivos compartidos:
@@ -1095,7 +1099,7 @@
                         <br>Selecciona "Mis archivos" o la carpeta específica donde quieres guardarlos
                         <br>Confirma haciendo clic en "Mover aquí"
                     </div>
-                    <img src="images/onedrive_paso6_mover_archivos.png" alt="Opción 'Mover a' en la barra de herramientas de OneDrive y selección de destino." class="tutorial-image">
+                    <img src="Fotos\Tutorial 3\Captura de pantalla 2025-06-30 151201.png" alt="Opción 'Mover a' en la barra de herramientas de OneDrive y selección de destino." class="tutorial-image">
                     <p class="image-caption">Imagen 3.6: Movimiento de archivos dentro de OneDrive.</p>
                     <div class="substep">
                         <strong>Método 2: Copiar archivos</strong>
@@ -1104,6 +1108,8 @@
                         <br>Elige la ubicación de destino
                         <br>Confirma con "Copiar aquí"
                     </div>
+                    <img src="Fotos\Tutorial 3\Captura de pantalla 2025-06-30 151249.png" alt="Opción 'Mover a' en la barra de herramientas de OneDrive y selección de destino." class="tutorial-image">
+                    <p class="image-caption">Imagen 3.6: Copia de archivos dentro de OneDrive.</p>
                     <div class="tip">
                         <strong>¿Mover o Copiar?</strong>
                         <br>Mover: Los archivos se transfieren completamente (desaparecen del compartido)
@@ -1128,8 +1134,7 @@
                         <br>Organiza por fechas si es necesario
                         <br>Renombra archivos si es necesario para evitar duplicados
                     </div>
-                    <img src="images/onedrive_paso7_organizar_mis_archivos.png" alt="Sección 'Mis archivos' en OneDrive web, con opciones de organización." class="tutorial-image">
-                    <p class="image-caption">Imagen 3.7: Organización de archivos en "Mis archivos" de OneDrive.</p>
+                    
                     <div class="tip">
                         📁 Estructura sugerida:
                         <br>📁 Mi OneDrive
@@ -1172,8 +1177,7 @@
                             <label>Los archivos están en las ubicaciones correctas</label>
                         </div>
                     </div>
-                    <img src="images/onedrive_paso8_verificacion.png" alt="Archivos transferidos exitosamente en la carpeta de destino de OneDrive." class="tutorial-image">
-                    <p class="image-caption">Imagen 3.8: Verificación final de la transferencia de archivos.</p>
+                    
                 </div>
             </div>
 
@@ -1215,7 +1219,7 @@
                     <br>• Repite el proceso para archivos faltantes
                 </div>
             </div>
-            <button class="back-button" onclick="goBack()">← Volver</button> 
+            <button class="back-button" onclick="goBackToMainMenu()">← Volver</button> 
         </div>
 
         <div id="tutorial4" class="tutorial-content">
@@ -1242,7 +1246,7 @@
                         <br>Haz clic en la pestaña "Archivo"
                         <br>Selecciona "Respuestas automáticas"
                     </div>
-                    <img src="images/autoresponse_paso1_respuestas_automaticas.png" alt="Acceso a 'Respuestas automáticas' desde el menú Archivo en Outlook." class="tutorial-image">
+                    <img src="Fotos\Tutorial 4\Captura de pantalla 2025-06-30 153731.png" alt="Acceso a 'Respuestas automáticas' desde el menú Archivo en Outlook." class="tutorial-image">
                     <p class="image-caption">Imagen 4.1: Acceso a las respuestas automáticas en Outlook.</p>
                     <div class="tip">
                         Nota: También puede aparecer como "Fuera de oficina" o "Mensaje automático"
@@ -1261,7 +1265,7 @@
                         Selecciona "Enviar respuestas automáticas"
                         <br>Elige activación inmediata (sin fechas específicas, ya que será permanente)
                     </div>
-                    <img src="images/autoresponse_paso2_enviar_respuestas.png" alt="Ventana de respuestas automáticas con la opción 'Enviar respuestas automáticas' seleccionada." class="tutorial-image">
+                    <img src="Fotos\Tutorial 4\Captura de pantalla 2025-06-30 153828.png" alt="Ventana de respuestas automáticas con la opción 'Enviar respuestas automáticas' seleccionada." class="tutorial-image">
                     <p class="image-caption">Imagen 4.2: Activación de respuestas automáticas.</p>
                 </div>
             </div>
@@ -1275,11 +1279,10 @@
                 <div class="step-content">
                     <div class="substep">
                         Configuración recomendada:
-                        <br>✅ "Enviar respuestas automáticas a personas externas a mi organización"
-                        <br>✅ "Cualquier persona externa" (en este caso específico es necesario)
+                        <br>✅ "Enviar respuestas automáticas a personas dentro de mi organización"
                     </div>
-                    <img src="images/autoresponse_paso3_destinatarios_externos.png" alt="Pestaña 'Fuera de mi organización' con las opciones de envío a externos." class="tutorial-image">
-                    <p class="image-caption">Imagen 4.3: Configuración para destinatarios externos.</p>
+                    <img src="Fotos\Tutorial 4\Captura de pantalla 2025-06-30 154033.png" alt="Pestaña 'Fuera de mi organización' con las opciones de envío a externos." class="tutorial-image">
+                    <p class="image-caption">Imagen 4.3: Configuración para destinatarios.</p>
                 </div>
             </div>
 
@@ -1306,7 +1309,7 @@
                         <br>[Nombre de la empresa]
                         <br>[Información de contacto general]
                     </div>
-                    <img src="images/autoresponse_paso4_redactar_mensaje.png" alt="Campo de texto para redactar el mensaje de respuesta automática." class="tutorial-image">
+                    <img src="Fotos\Tutorial 4\Captura de pantalla 2025-06-30 154158.png" alt="Campo de texto para redactar el mensaje de respuesta automática." class="tutorial-image">
                     <p class="image-caption">Imagen 4.4: Redacción del mensaje de respuesta automática.</p>
                 </div>
             </div>
@@ -1323,7 +1326,7 @@
                         <br>Verifica que aparezca "Respuestas automáticas: Activadas" en la barra de estado
                         <br>Realiza una prueba enviando un correo desde otra cuenta
                     </div>
-                    <img src="images/autoresponse_paso5_activar_aceptar.png" alt="Botón 'Aceptar' para guardar la configuración de respuestas automáticas." class="tutorial-image">
+                    <img src="Fotos\Tutorial 4\Captura de pantalla 2025-06-30 154227.png" alt="Botón 'Aceptar' para guardar la configuración de respuestas automáticas." class="tutorial-image">
                     <p class="image-caption">Imagen 4.5: Activación final de la respuesta automática.</p>
                 </div>
             </div>
@@ -1349,7 +1352,7 @@
             <div class="success">
                 <strong>¡Configuración completada!</strong> Tu respuesta automática de cuenta desactivada está lista.
             </div>
-            <button class="back-button" onclick="goBack()">← Volver</button> 
+            <button class="back-button" onclick="goBackToSubMenu()">← Volver</button> 
         </div>
       
     </div>
