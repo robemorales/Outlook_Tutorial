@@ -1405,11 +1405,14 @@
         function toggleStep(element) {
             const stepContent = element.nextElementSibling;
             const toggleIcon = element.querySelector('.step-toggle');
-            stepContent.classList.toggle('collapsed');
-            if (stepContent.classList.contains('collapsed')) {
-                toggleIcon.textContent = '▼';
-            } else {
-                toggleIcon.textContent = '▲';
+            
+            if (stepContent) { // Verificamos que el elemento exista
+                stepContent.classList.toggle('collapsed');
+                if (stepContent.classList.contains('collapsed')) {
+                    toggleIcon.textContent = '▼';
+                } else {
+                    toggleIcon.textContent = '▲';
+                }
             }
         }
 
