@@ -445,7 +445,8 @@
             <div class="content-header">
                 <h2>📮 Redirección Automática de Correos en Outlook</h2>
                 <div>
-                    <button class="download-button" onclick="downloadPDF_noImages(1)">Descargar PDF</button>
+                    <button class="download-button download-pdf-button" onclick="downloadPDF(1)">Descargar PDF</button>
+                    <button class="download-button download-word-button" onclick="downloadWord(1)">Descargar Word</button>
                     <button class="back-button" onclick="goBack()">← Volver</button>
                 </div>
             </div>
@@ -1041,7 +1042,7 @@
                         <br>Remitente: Microsoft OneDrive
                     </div>
                     <div class="substep">
-                        Haz clic en "Ver en OneDrive"
+                        Haz clic en "Abrir"
                         <br>Inicia sesión en tu cuenta OneDrive de destino si es necesario
                     </div>
                     <img src="images/onedrive_paso4_email_invitacion.png" alt="Email de invitación de OneDrive para acceder a archivos compartidos." class="tutorial-image">
@@ -1345,156 +1346,131 @@
 
     </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://unpkg.com/html-to-docx-js/dist/html-to-docx.js"></script>
 
-    <script>
-        // ... (las funciones showTutorial, goBack, toggleStep, etc. se quedan igual) ...
+<script>
+    // --- NAVEGACIÓN BÁSICA ---
 
-        function showTutorial(tutorialId) {
-            document.getElementById('tutorialGrid').style.display = 'none';
-            document.getElementById('searchInput').style.display = 'none';
-            const tutorials = document.querySelectorAll('.tutorial-content');
-            tutorials.forEach(t => t.classList.remove('active'));
-            const activeTutorial = document.getElementById('tutorial' + tutorialId);
-            if (activeTutorial) activeTutorial.classList.add('active');
-        }
+    function showTutorial(tutorialId) {
+        document.getElementById('tutorialGrid').style.display = 'none';
+        document.getElementById('searchInput').style.display = 'none';
+        document.querySelectorAll('.tutorial-content').forEach(t => t.classList.remove('active'));
+        const activeTutorial = document.getElementById('tutorial' + tutorialId);
+        if (activeTutorial) activeTutorial.classList.add('active');
+    }
 
-        function goBack() {
-            document.getElementById('tutorialGrid').style.display = 'grid';
-            document.getElementById('searchInput').style.display = 'block';
-            document.querySelectorAll('.tutorial-content').forEach(t => t.classList.remove('active'));
-        }
+    function goBack() {
+        document.getElementById('tutorialGrid').style.display = 'grid';
+        document.getElementById('searchInput').style.display = 'block';
+        document.querySelectorAll('.tutorial-content').forEach(t => t.classList.remove('active'));
+    }
 
-        function toggleStep(element) {
-            const stepContent = element.nextElementSibling;
-            const toggleIcon = element.querySelector('.step-toggle');
-            stepContent.classList.toggle('collapsed');
-            toggleIcon.textContent = stepContent.classList.contains('collapsed') ? '▼' : '▲';
-        }
+    function toggleStep(element) {
+        const stepContent = element.nextElementSibling;
+        const toggleIcon = element.querySelector('.step-toggle');
+        stepContent.classList.toggle('collapsed');
+        toggleIcon.textContent = stepContent.classList.contains('collapsed') ? '▼' : '▲';
+    }
 
-        // **FUNCIÓN DE DESCARGA CON ALERTA DE ERROR**
-        function downloadPDF(tutorialId) {
-            const { jsPDF } = window.jspdf;
-            const tutorialContent = document.getElementById('tutorial' + tutorialId);
-            const sectionsToExpand = tutorialContent.querySelectorAll('.step-content.collapsed');
+    // --- FUNCIÓN DE DESCARGA DE PDF (PARA GITHUB PAGES) ---
 
-            // Muestra un mensaje de "cargando" para el usuario
-            const downloadButton = tutorialContent.querySelector('.download-button');
-            const originalButtonText = downloadButton.textContent;
-            downloadButton.textContent = 'Generando...';
-            downloadButton.disabled = true;
+    function downloadPDF(tutorialId) {
+        const { jsPDF } = window.jspdf;
+        const tutorialContent = document.getElementById('tutorial' + tutorialId);
+        const downloadButton = tutorialContent.querySelector('.download-pdf-button');
+        
+        const originalButtonText = downloadButton.textContent;
+        downloadButton.textContent = 'Generando...';
+        downloadButton.disabled = true;
 
-            // Expande las secciones
-            sectionsToExpand.forEach(section => {
-                section.classList.remove('collapsed');
-                const toggleIcon = section.previousElementSibling.querySelector('.step-toggle');
-                if (toggleIcon) toggleIcon.textContent = '▲';
-            });
-
-            setTimeout(() => {
-                html2canvas(tutorialContent, { scale: 2, useCORS: true })
-                    .then(canvas => {
-                        const imgData = canvas.toDataURL('image/png');
-                        const pdf = new jsPDF('p', 'mm', 'a4');
-                        const pdfWidth = pdf.internal.pageSize.getWidth();
-                        const canvasWidth = canvas.width;
-                        const canvasHeight = canvas.height;
-                        const ratio = canvasWidth / canvasHeight;
-                        const imgWidth = pdfWidth - 20;
-                        const imgHeight = imgWidth / ratio;
-                        let heightLeft = imgHeight;
-                        let position = 10;
-
-                        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                        heightLeft -= (pdf.internal.pageSize.getHeight() - 20);
-
-                        while (heightLeft > 0) {
-                            position = heightLeft - imgHeight + 10;
-                            pdf.addPage();
-                            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-                            heightLeft -= (pdf.internal.pageSize.getHeight() - 20);
-                        }
-
-                        const tutorialTitle = tutorialContent.querySelector('h2').textContent.trim();
-                        pdf.save(`${tutorialTitle}.pdf`);
-                    })
-                    .catch(err => {
-                        // **¡AQUÍ ESTÁ LA ALERTA!**
-                        alert('Error al generar el PDF. Causa más probable: las imágenes son locales y no se pueden cargar. Revisa la consola (F12) para ver el error técnico.');
-                        console.error("Error en html2canvas:", err);
-                    })
-                    .finally(() => {
-                        // Restaura todo, haya funcionado o no
-                        sectionsToExpand.forEach(section => {
-                            section.classList.add('collapsed');
-                            const toggleIcon = section.previousElementSibling.querySelector('.step-toggle');
-                            if (toggleIcon) toggleIcon.textContent = '▼';
-                        });
-                        downloadButton.textContent = originalButtonText;
-                        downloadButton.disabled = false;
-                    });
-            }, 500);
-        }
-         // **AÑADE ESTA NUEVA FUNCIÓN DE PRUEBA**
-        function downloadPDF_noImages(tutorialId) {
-            const { jsPDF } = window.jspdf;
-            const tutorialContent = document.getElementById('tutorial' + tutorialId);
-            
-            // Ocultamos temporalmente todas las imágenes
-            const images = tutorialContent.querySelectorAll('.tutorial-image');
-            images.forEach(img => img.style.display = 'none');
-            
-            alert("Prueba sin imágenes iniciada. El PDF se generará solo con texto.");
-
-            // El resto del código es idéntico a la función original
-            const sectionsToExpand = tutorialContent.querySelectorAll('.step-content.collapsed');
-            sectionsToExpand.forEach(section => section.classList.remove('collapsed'));
-
-            setTimeout(() => {
-                html2canvas(tutorialContent, { scale: 2 })
-                    .then(canvas => {
-                        const imgData = canvas.toDataURL('image/png');
-                        const pdf = new jsPDF('p', 'mm', 'a4');
-                        // ... (código de creación de PDF idéntico) ...
-                        const pdfWidth = pdf.internal.pageSize.getWidth();
-                        const imgWidth = pdfWidth - 20;
-                        const imgHeight = canvas.height * imgWidth / canvas.width;
-                        pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-
-                        const tutorialTitle = tutorialContent.querySelector('h2').textContent.trim();
-                        pdf.save(`${tutorialTitle} (sin imágenes).pdf`);
-                    })
-                    .catch(err => {
-                        alert('La prueba sin imágenes también falló. El problema podría ser otro. Revisa la consola.');
-                        console.error("Error en prueba sin imágenes:", err);
-                    })
-                    .finally(() => {
-                        // Restauramos todo
-                        sectionsToExpand.forEach(section => section.classList.add('collapsed'));
-                        images.forEach(img => img.style.display = 'block'); // Volvemos a mostrar las imágenes
-                    });
-            }, 500);
-        }
-
-        // ... (las funciones de búsqueda y DOMContentLoaded se quedan igual) ...
-
-        document.getElementById('searchInput').addEventListener('keyup', function() {
-            const searchTerm = this.value.toLowerCase();
-            const tutorialCards = document.querySelectorAll('.tutorial-card');
-            tutorialCards.forEach(card => {
-                const text = card.textContent.toLowerCase();
-                card.style.display = text.includes(searchTerm) ? 'block' : 'none';
-            });
+        const sectionsToExpand = tutorialContent.querySelectorAll('.step-content.collapsed');
+        sectionsToExpand.forEach(section => {
+            section.classList.remove('collapsed');
+            const toggleIcon = section.previousElementSibling.querySelector('.step-toggle');
+            if (toggleIcon) toggleIcon.textContent = '▲';
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.step-content').forEach(content => {
-                content.classList.add('collapsed');
-                content.previousElementSibling.querySelector('.step-toggle').textContent = '▼';
+        // Pequeña demora para asegurar que el navegador renderice los cambios y las imágenes
+        setTimeout(() => {
+            html2canvas(tutorialContent, {
+                scale: 2,
+                useCORS: true, // Clave para cargar imágenes en un entorno en línea
+                logging: true // Muestra información útil en la consola
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const imgWidth = pdfWidth - 20; // Márgenes de 10mm a cada lado
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 10; // Margen superior
+
+                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                heightLeft -= (pdf.internal.pageSize.getHeight() - 20);
+
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight + 10;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                    heightLeft -= (pdf.internal.pageSize.getHeight() - 20);
+                }
+                const tutorialTitle = tutorialContent.querySelector('h2').textContent.trim();
+                pdf.save(`${tutorialTitle}.pdf`);
+
+            }).catch(err => {
+                alert('Hubo un error al generar el PDF. Por favor, revisa la consola del navegador (F12) para más detalles.');
+                console.error("Error en html2canvas:", err);
+            }).finally(() => {
+                // Restaurar la vista original
+                sectionsToExpand.forEach(section => {
+                    section.classList.add('collapsed');
+                    const toggleIcon = section.previousElementSibling.querySelector('.step-toggle');
+                    if (toggleIcon) toggleIcon.textContent = '▼';
+                });
+                downloadButton.textContent = originalButtonText;
+                downloadButton.disabled = false;
             });
+        }, 1000); // 1 segundo de espera
+    }
+
+    // --- FUNCIÓN DE DESCARGA DE WORD ---
+    
+    function downloadWord(tutorialId) {
+        const tutorialContent = document.getElementById('tutorial' + tutorialId);
+        const contentToExport = tutorialContent.cloneNode(true);
+        
+        // Limpiamos elementos de UI que no queremos en el documento
+        contentToExport.querySelector('.content-header').remove();
+        contentToExport.querySelector('.progress-bar').remove();
+
+        const htmlString = `<!DOCTYPE html><body>${contentToExport.innerHTML}</body></html>`;
+        const fileBuffer = htmlToDocx.asBlob(htmlString, {
+            // La librería intentará codificar las imágenes en base64 para incluirlas
+            mime: 'image/jpeg'
         });
 
-    </script>
+        const tutorialTitle = tutorialContent.querySelector('h2').textContent.trim();
+        saveAs(fileBuffer, `${tutorialTitle}.docx`);
+    }
+
+    // --- CÓDIGO INICIAL (NO CAMBIA) ---
+
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        const searchTerm = this.value.toLowerCase();
+        document.querySelectorAll('.tutorial-card').forEach(card => {
+            const text = card.textContent.toLowerCase();
+            card.style.display = text.includes(searchTerm) ? 'block' : 'none';
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.step-content').forEach(content => {
+            content.classList.add('collapsed');
+            content.previousElementSibling.querySelector('.step-toggle').textContent = '▼';
+        });
+    });
+</script>
 </body>
 </html>
